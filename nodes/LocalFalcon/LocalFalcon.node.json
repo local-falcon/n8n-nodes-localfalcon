@@ -1,0 +1,23 @@
+{
+	"node": "n8n-nodes-localfalcon.LocalFalcon",
+	"nodeVersion": "1.0",
+	"codex": {
+		"categories": ["Marketing & Analytics"],
+		"subcategories": {
+			"Marketing & Analytics": ["SEO", "Local Search"]
+		},
+		"resources": {
+			"credentialDocumentation": [
+				{
+					"url": "https://www.localfalcon.com/api/credentials/"
+				}
+			],
+			"primaryDocumentation": [
+				{
+					"url": "https://docs.localfalcon.com/"
+				}
+			]
+		},
+		"alias": ["local seo", "rank tracking", "google maps", "local search"]
+	}
+}

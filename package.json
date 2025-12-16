@@ -1,6 +1,6 @@
 {
   "name": "@local-falcon/n8n-nodes-localfalcon",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "n8n community node for Local Falcon API - Local SEO rank tracking and analysis",
   "keywords": [
     "n8n-community-node-package",
@@ -57,6 +57,5 @@
     "typescript-eslint": "^8.46.3"
   },
   "peerDependencies": {},
-  "dependencies": {
-  }
+  "dependencies": {}
 }

@@ -4,7 +4,10 @@ import {
 	INodeType,
 	INodeTypeDescription,
 	IDataObject,
+	JsonObject,
+	NodeApiError,
 	NodeOperationError,
+	NodeConnectionTypes,
 } from 'n8n-workflow';
 
 export class LocalFalcon implements INodeType {
@@ -19,8 +22,8 @@ export class LocalFalcon implements INodeType {
 		defaults: {
 			name: 'Local Falcon',
 		},
-		inputs: ['main'],
-		outputs: ['main'],
+		inputs: [NodeConnectionTypes.Main],
+		outputs: [NodeConnectionTypes.Main],
 		credentials: [
 			{
 				name: 'localFalconApi',
@@ -1933,13 +1936,13 @@ export class LocalFalcon implements INodeType {
 				if (this.continueOnFail()) {
 					returnData.push({
 						json: {
-							error: 'error',
+							error: (error as Error).message,
 						},
 						pairedItem: { item: i },
 					});
 					continue;
 				}
-				throw error;
+				throw new NodeApiError(this.getNode(), error as JsonObject);
 			}
 		}
 

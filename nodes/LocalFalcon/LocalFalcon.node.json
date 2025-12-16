@@ -3,9 +3,6 @@
 	"nodeVersion": "1.0",
 	"codex": {
 		"categories": ["Marketing & Analytics"],
-		"subcategories": {
-			"Marketing & Analytics": ["SEO", "Local Search"]
-		},
 		"resources": {
 			"credentialDocumentation": [
 				{

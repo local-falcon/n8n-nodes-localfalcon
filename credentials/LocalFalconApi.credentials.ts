@@ -26,8 +26,8 @@ export class LocalFalconApi implements ICredentialType {
 	authenticate: IAuthenticateGeneric = {
 		type: 'generic',
 		properties: {
-			body: {
-				api_key: '={{$credentials.apiKey}}',
+			headers: {
+				Authorization: '=Bearer {{$credentials.apiKey}}',
 			},
 		},
 	};
@@ -37,9 +37,7 @@ export class LocalFalconApi implements ICredentialType {
 			baseURL: 'https://api.localfalcon.com',
 			url: '/v2/account/',
 			method: 'POST',
-			body: {
-				api_key: '={{$credentials.apiKey}}',
-			},
+			body: {},
 			headers: {
 				'Content-Type': 'application/x-www-form-urlencoded',
 			},

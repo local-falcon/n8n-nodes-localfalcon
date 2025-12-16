@@ -1917,8 +1917,8 @@ export class LocalFalcon implements INodeType {
 					}
 				}
 
-				// Make the API request
-				const response = await this.helpers.httpRequest({
+				// Make the API request with authentication
+				const response = await this.helpers.httpRequestWithAuthentication.call(this, 'localFalconApi', {
 					method: 'POST',
 					url: endpoint,
 					body: formData.toString(),

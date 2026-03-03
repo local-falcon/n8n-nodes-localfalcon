@@ -1,6 +1,6 @@
 {
   "name": "@local-falcon/n8n-nodes-localfalcon",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "description": "n8n community node for Local Falcon API - Local SEO rank tracking and analysis",
   "keywords": [
     "n8n-community-node-package",
@@ -37,7 +37,8 @@
   "n8n": {
     "n8nNodesApiVersion": 1,
     "credentials": [
-      "dist/credentials/LocalFalconApi.credentials.js"
+      "dist/credentials/LocalFalconApi.credentials.js",
+      "dist/credentials/LocalFalconOAuth2Api.credentials.js"
     ],
     "nodes": [
       "dist/nodes/LocalFalcon/LocalFalcon.node.js"

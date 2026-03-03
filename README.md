@@ -75,7 +75,26 @@ This node supports the following resources and operations:
 
 ## Credentials
 
-To use this node, you need a Local Falcon API key. You can generate your API key from the [Local Falcon API Credentials page](https://www.localfalcon.com/api/credentials/).
+This node supports two authentication methods:
+
+### OAuth2 (Recommended)
+
+OAuth2 is the default and recommended authentication method. It uses Local Falcon's OAuth 2.0 authorization code flow with pre-configured application credentials — no manual setup required.
+
+1. Add the Local Falcon node to your workflow
+2. Select **OAuth2** as the authentication method (selected by default)
+3. Click **Create New Credential** under "Local Falcon OAuth2 API"
+4. Click **Sign in with Local Falcon** to authorize via the OAuth consent screen
+5. Once authorized, the credential is ready to use
+
+### API Key
+
+You can also authenticate using a Local Falcon API key.
+
+1. Generate your API key from the [Local Falcon API Credentials page](https://www.localfalcon.com/api/credentials/)
+2. Add the Local Falcon node to your workflow
+3. Select **API Key** as the authentication method
+4. Enter your API key in the credential configuration
 
 ## Compatibility
 
@@ -86,9 +105,10 @@ Tested with n8n version 1.0.0 and above.
 ### Basic Scan Example
 
 1. Add the Local Falcon node to your workflow
-2. Select "Scan" as the resource
-3. Select "Run" as the operation
-4. Configure the scan parameters:
+2. Choose your authentication method (OAuth2 or API Key)
+3. Select "Scan" as the resource
+4. Select "Run" as the operation
+5. Configure the scan parameters:
    - Platform (Google, Apple Maps, etc.)
    - Place ID
    - Keyword
@@ -134,6 +154,12 @@ Tested with n8n version 1.0.0 and above.
 [MIT](LICENSE.md)
 
 ## Version History
+
+### 1.1.0
+- Added OAuth2 authentication support (authorization code flow)
+- OAuth2 is now the default authentication method
+- API Key authentication remains supported as an alternative
+- Pre-configured OAuth application credentials for seamless setup
 
 ### 1.0.0
 - Initial release

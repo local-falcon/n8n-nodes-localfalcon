@@ -4,7 +4,7 @@
 
 - Node.js 18+ installed
 - n8n installed (locally or via npm)
-- Local Falcon API key
+- A Local Falcon account (for OAuth2) or a Local Falcon API key
 
 ## Step 1: Build the Node
 
@@ -50,12 +50,25 @@ npx n8n
 
 ## Step 5: Configure Credentials
 
+### Option A: OAuth2 (Recommended)
+
 1. Click on the Local Falcon node
-2. Click "Credential to connect with"
-3. Click "Create New Credential"
-4. Select "Local Falcon API"
-5. Enter your API key from https://www.localfalcon.com/api/credentials/
-6. Click "Save"
+2. Ensure **OAuth2** is selected as the authentication method (it is the default)
+3. Click "Credential to connect with"
+4. Click "Create New Credential"
+5. Click **Sign in with Local Falcon** to open the OAuth consent screen
+6. Log in to your Local Falcon account and authorize the application
+7. You will be redirected back to n8n with the credential configured
+
+### Option B: API Key
+
+1. Click on the Local Falcon node
+2. Change the authentication method to **API Key**
+3. Click "Credential to connect with"
+4. Click "Create New Credential"
+5. Select "Local Falcon API"
+6. Enter your API key from https://www.localfalcon.com/api/credentials/
+7. Click "Save"
 
 ## Step 6: Run Your First Scan
 
@@ -134,7 +147,12 @@ npm install
 npm run build
 ```
 
-### Credential test fails
+### OAuth2 credential fails
+- Ensure you are logged in to your Local Falcon account
+- Check that you completed the OAuth consent screen and authorized the application
+- Try disconnecting and reconnecting the credential
+
+### API Key credential test fails
 - Verify API key is correct
 - Check internet connection
 - Ensure no IP whitelist restrictions

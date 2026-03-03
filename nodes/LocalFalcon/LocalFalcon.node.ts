@@ -26,11 +26,41 @@ export class LocalFalcon implements INodeType {
 		outputs: [NodeConnectionTypes.Main],
 		credentials: [
 			{
+				name: 'localFalconOAuth2Api',
+				required: true,
+				displayOptions: {
+					show: {
+						authentication: ['oAuth2'],
+					},
+				},
+			},
+			{
 				name: 'localFalconApi',
 				required: true,
+				displayOptions: {
+					show: {
+						authentication: ['apiKey'],
+					},
+				},
 			},
 		],
 		properties: [
+			{
+				displayName: 'Authentication',
+				name: 'authentication',
+				type: 'options',
+				options: [
+					{
+						name: 'OAuth2',
+						value: 'oAuth2',
+					},
+					{
+						name: 'API Key',
+						value: 'apiKey',
+					},
+				],
+				default: 'oAuth2',
+			},
 			{
 				displayName: 'Resource',
 				name: 'resource',
@@ -1706,9 +1736,20 @@ export class LocalFalcon implements INodeType {
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 		const items = this.getInputData();
 		const returnData: INodeExecutionData[] = [];
-		const credentials = await this.getCredentials('localFalconApi');
 
-		const apiKey = credentials.apiKey as string;
+		const authType = this.getNodeParameter('authentication', 0) as string;
+		let apiKey: string;
+
+		if (authType === 'oAuth2') {
+			const credentials = await this.getCredentials('localFalconOAuth2Api');
+			const tokenData = credentials.oauthTokenData as IDataObject;
+			// LocalFalcon nests the token response under "data"
+			const data = tokenData.data as IDataObject | undefined;
+			apiKey = (data?.api_key || data?.access_token || tokenData.access_token) as string;
+		} else {
+			const credentials = await this.getCredentials('localFalconApi');
+			apiKey = credentials.apiKey as string;
+		}
 
 		for (let i = 0; i < items.length; i++) {
 			try {
@@ -1917,13 +1958,14 @@ export class LocalFalcon implements INodeType {
 					}
 				}
 
-				// Make the API request with authentication
-				const response = await this.helpers.httpRequestWithAuthentication.call(this, 'localFalconApi', {
+				// Make the API request with Bearer token
+				const response = await this.helpers.httpRequest({
 					method: 'POST',
 					url: endpoint,
 					body: formData.toString(),
 					headers: {
 						'Content-Type': 'application/x-www-form-urlencoded',
+						'Authorization': `Bearer ${apiKey}`,
 					},
 				});
 

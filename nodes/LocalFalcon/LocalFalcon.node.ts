@@ -1764,7 +1764,7 @@ export class LocalFalcon implements INodeType {
 				// Handle different resources and operations
 				if (resource === 'scan') {
 					if (operation === 'run') {
-						endpoint = 'https://api.localfalcon.com/v2/scans/';
+						endpoint = 'https://api.localfalcon.com/v2/run-scan/';
 						body.platform = this.getNodeParameter('platform', i);
 						body.place_id = this.getNodeParameter('placeId', i);
 						body.keyword = this.getNodeParameter('keyword', i);

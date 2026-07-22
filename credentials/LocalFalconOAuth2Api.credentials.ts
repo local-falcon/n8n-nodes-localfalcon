@@ -21,13 +21,17 @@ export class LocalFalconOAuth2Api implements ICredentialType {
 			displayName: 'Authorization URL',
 			name: 'authUrl',
 			type: 'hidden',
-			default: 'https://localfalcon.com/oauth-v2/authorize',
+			// Use the www host consistently: Local Falcon's "Sign in with Google"
+			// redirects to https://www.localfalcon.com/oauth-v2/google, and the
+			// PHPSESSID cookie is host-scoped (no Domain attribute). Sending users
+			// to the no-www host loses the session across the Google round-trip.
+			default: 'https://www.localfalcon.com/oauth-v2/authorize',
 		},
 		{
 			displayName: 'Access Token URL',
 			name: 'accessTokenUrl',
 			type: 'hidden',
-			default: 'https://localfalcon.com/oauth-v2/token',
+			default: 'https://www.localfalcon.com/oauth-v2/token',
 		},
 		{
 			displayName: 'Client ID',

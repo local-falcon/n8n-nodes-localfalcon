@@ -584,6 +584,13 @@ export class LocalFalcon implements INodeType {
 						default: false,
 						description: 'Whether to include AI analysis',
 					},
+					{
+						displayName: 'Eager',
+						name: 'eager',
+						type: 'boolean',
+						default: false,
+						description: 'Whether to run the scan in eager mode and not wait for the results to come back. Poll for scan results separately.',
+					},
 				],
 			},
 

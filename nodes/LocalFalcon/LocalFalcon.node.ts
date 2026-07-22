@@ -1745,18 +1745,7 @@ export class LocalFalcon implements INodeType {
 		const returnData: INodeExecutionData[] = [];
 
 		const authType = this.getNodeParameter('authentication', 0) as string;
-		let apiKey: string;
-
-		if (authType === 'oAuth2') {
-			const credentials = await this.getCredentials('localFalconOAuth2Api');
-			const tokenData = credentials.oauthTokenData as IDataObject;
-			// LocalFalcon nests the token response under "data"
-			const data = tokenData.data as IDataObject | undefined;
-			apiKey = (data?.api_key || data?.access_token || tokenData.access_token) as string;
-		} else {
-			const credentials = await this.getCredentials('localFalconApi');
-			apiKey = credentials.apiKey as string;
-		}
+		const credentialType = authType === 'oAuth2' ? 'localFalconOAuth2Api' : 'localFalconApi';
 
 		for (let i = 0; i < items.length; i++) {
 			try {
@@ -1764,9 +1753,7 @@ export class LocalFalcon implements INodeType {
 				const operation = this.getNodeParameter('operation', i) as string;
 
 				let endpoint = '';
-				const body: IDataObject = {
-					api_key: apiKey,
-				};
+				const body: IDataObject = {};
 
 				// Handle different resources and operations
 				if (resource === 'scan') {
@@ -1965,16 +1952,26 @@ export class LocalFalcon implements INodeType {
 					}
 				}
 
-				// Make the API request with Bearer token
-				const response = await this.helpers.httpRequest({
-					method: 'POST',
-					url: endpoint,
-					body: formData.toString(),
-					headers: {
-						'Content-Type': 'application/x-www-form-urlencoded',
-						'Authorization': `Bearer ${apiKey}`,
+				// Make the authenticated API request. httpRequestWithAuthentication
+				// injects the credential internally (Bearer header for the API key,
+				// or the OAuth2 token) and benefits from n8n's token refresh and
+				// audit logging. LocalFalcon's OAuth2 token response nests the usable
+				// key under "data.api_key", so point the OAuth2 helper at that path.
+				const response = await this.helpers.httpRequestWithAuthentication.call(
+					this,
+					credentialType,
+					{
+						method: 'POST',
+						url: endpoint,
+						body: formData.toString(),
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded',
+						},
 					},
-				});
+					authType === 'oAuth2'
+						? { oauth2: { property: 'data.api_key', tokenType: 'Bearer' } }
+						: undefined,
+				);
 
 				returnData.push({
 					json: response as IDataObject,

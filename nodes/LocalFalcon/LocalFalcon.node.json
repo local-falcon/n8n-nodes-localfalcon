@@ -2,7 +2,7 @@
 	"node": "@local-falcon/n8n-nodes-localfalcon.LocalFalcon",
 	"nodeVersion": "1.0",
 	"codexVersion": "1.0",
-	"categories": ["Marketing & Analytics"],
+	"categories": ["Marketing & Content", "Analytics"],
 	"resources": {
 		"credentialDocumentation": [
 			{

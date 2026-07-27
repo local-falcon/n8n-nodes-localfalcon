@@ -1,11 +1,13 @@
 import {
 	ICredentialType,
+	Icon,
 	INodeProperties,
 } from 'n8n-workflow';
 
 export class LocalFalconOAuth2Api implements ICredentialType {
 	name = 'localFalconOAuth2Api';
 	displayName = 'Local Falcon OAuth2 API';
+	icon: Icon = 'file:localfalcon.svg';
 	extends = ['oAuth2Api'];
 	documentationUrl = 'https://www.localfalcon.com/api/credentials/';
 	// The client_id and client_secret are statically assigned OAuth application
@@ -43,6 +45,9 @@ export class LocalFalconOAuth2Api implements ICredentialType {
 			displayName: 'Client Secret',
 			name: 'clientSecret',
 			type: 'hidden',
+			typeOptions: {
+				password: true,
+			},
 			default: '8e4f0a0729b6195d06c38a9bbe47704f4edb5538857ce213454ec5014e002884',
 		},
 		{

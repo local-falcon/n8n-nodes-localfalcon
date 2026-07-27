@@ -2,12 +2,14 @@ import {
 	IAuthenticateGeneric,
 	ICredentialTestRequest,
 	ICredentialType,
+	Icon,
 	INodeProperties,
 } from 'n8n-workflow';
 
 export class LocalFalconApi implements ICredentialType {
 	name = 'localFalconApi';
 	displayName = 'Local Falcon API';
+	icon: Icon = 'file:localfalcon.svg';
 	documentationUrl = 'https://www.localfalcon.com/api/credentials/';
 	properties: INodeProperties[] = [
 		{

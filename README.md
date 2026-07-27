@@ -14,7 +14,7 @@ Follow the [installation guide](https://docs.n8n.io/integrations/community-nodes
 
 1. Install the package in your n8n installation:
 ```bash
-npm install n8n-nodes-localfalcon
+npm install @local-falcon/n8n-nodes-localfalcon
 ```
 
 2. Restart your n8n instance
@@ -171,6 +171,6 @@ Tested with n8n version 1.0.0 and above.
 ## Support
 
 For issues or questions:
-- [GitHub Issues](https://github.com/yourusername/n8n-nodes-localfalcon/issues)
+- [GitHub Issues](https://github.com/local-falcon/n8n-nodes-localfalcon/issues)
 - [n8n Community Forum](https://community.n8n.io)
 - [Local Falcon Support](https://www.localfalcon.com/support/)

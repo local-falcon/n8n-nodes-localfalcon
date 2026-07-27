@@ -5,7 +5,6 @@ module.exports = {
 		ecmaVersion: 2020,
 		sourceType: 'module',
 	},
-	plugins: ['@typescript-eslint'],
 	extends: ['plugin:n8n-nodes-base/community'],
 	rules: {
 		'n8n-nodes-base/node-param-resource-with-plural-option': 'off',

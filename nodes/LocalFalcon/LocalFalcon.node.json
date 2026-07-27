@@ -1,20 +1,19 @@
 {
-	"node": "n8n-nodes-localfalcon.LocalFalcon",
+	"node": "@local-falcon/n8n-nodes-localfalcon.LocalFalcon",
 	"nodeVersion": "1.0",
-	"codex": {
-		"categories": ["Marketing & Analytics"],
-		"resources": {
-			"credentialDocumentation": [
-				{
-					"url": "https://www.localfalcon.com/api/credentials/"
-				}
-			],
-			"primaryDocumentation": [
-				{
-					"url": "https://docs.localfalcon.com/"
-				}
-			]
-		},
-		"alias": ["local seo", "rank tracking", "google maps", "local search"]
-	}
+	"codexVersion": "1.0",
+	"categories": ["Marketing & Analytics"],
+	"resources": {
+		"credentialDocumentation": [
+			{
+				"url": "https://www.localfalcon.com/api/credentials/"
+			}
+		],
+		"primaryDocumentation": [
+			{
+				"url": "https://docs.localfalcon.com/"
+			}
+		]
+	},
+	"alias": ["local seo", "rank tracking", "google maps", "local search"]
 }

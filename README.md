@@ -73,6 +73,46 @@ This node supports the following resources and operations:
 ### Account
 - **Get Info**: Get account information
 
+### Google Business Profile
+
+These resources read and write the live Google Business Profile behind a connected location, not Local Falcon report data. Every operation needs the Google Place ID of a location that is connected to a Google account in Local Falcon. Use **Location → List** with the **GBP Linked** filter enabled to find eligible locations.
+
+#### Google Business Profile
+- **Get Details**: Get the live profile as Google provides it
+- **Get Google Updated Version**: Get Google's version of the profile and the fields that differ from yours
+- **Get Verification Status**: Verification standing, including whether Google will accept writes
+- **Get Performance Metrics**: Daily performance metrics for a date range
+- **Get Attributes** / **List Available Attributes** / **Set Attributes**: Read, discover and set profile attributes
+- **Search Categories** / **Search Chains**: Look up Google categories and chains
+- **Update Details**: Update profile fields such as title, phone, website or description
+- **Update Hours**: Update regular or special hours
+- **Update Open Status**: Mark the profile open, temporarily closed or permanently closed
+
+#### Google Business Profile Post
+- **List** / **Get** / **Create** / **Update** / **Delete** posts
+
+#### Google Business Profile Media
+- **List** / **Get** / **Add** / **Update Category** / **Delete** owner media
+- **List Customer Media**: Photos customers have added (read only)
+
+#### Google Business Profile Review
+- **List** / **Get** live reviews, with filters for rating and unanswered reviews
+- **Reply**: Publish a reply to a review (replaces any existing reply)
+- **Delete Reply**: Remove a reply from public view
+
+#### Google Business Profile Link
+- **List** / **Get** / **Add** / **Update** / **Delete** action links (booking, ordering and similar buttons)
+- **List Action Types**: The link types the location is allowed to use
+
+#### Google Business Profile Service
+- **List** / **Add** / **Remove** / **Replace** services
+
+#### Confirmation for irreversible operations
+
+Delete Post, Delete Media, Delete Link, Delete Reply, Set Attributes, Replace Services, and Update Open Status when the status is Closed Permanently cannot be undone. Each of these shows a warning in the node and a confirmation toggle that is off by default. While the toggle is off the node fails with an error before sending any request (with "Continue On Fail" enabled the item carries the error and still sends nothing). When it is on, the node sends the confirmation token the Local Falcon API requires for that operation. The toggle cannot be set from an expression or by an AI agent, so a person has to enable it on each node.
+
+Array and object parameters are sent to the API as indexed form fields. Structured fields are provided where the shape is documented (services, regular hours, call to action, post media); open-ended shapes (profile updates, post event and offer details, special hours, attributes) are entered as JSON. List operations accept a limit of 1 to 100 (reviews: 1 to 50).
+
 ## Credentials
 
 This node supports two authentication methods:
@@ -154,6 +194,11 @@ Tested with n8n version 1.0.0 and above.
 [MIT](LICENSE.md)
 
 ## Version History
+
+### 1.2.0
+- Added Google Business Profile management (six resources covering all 33 `/v2/gbp/*` endpoints)
+- Irreversible operations require a confirmation toggle and fail before any request while it is off
+- Added the GBP Linked filter to Location → List
 
 ### 1.1.0
 - Added OAuth2 authentication support (authorization code flow)

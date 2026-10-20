@@ -7,7 +7,11 @@ import {
 	JsonObject,
 	NodeApiError,
 	NodeConnectionTypes,
+	NodeOperationError,
 } from 'n8n-workflow';
+import { gbpFields, gbpOperations } from './GbpDescription';
+import { buildGbpRequest } from './GbpRequest';
+import { toFormBody } from './GenericFunctions';
 
 export class LocalFalcon implements INodeType {
 	description: INodeTypeDescription = {
@@ -17,7 +21,8 @@ export class LocalFalcon implements INodeType {
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
-		description: 'Interact with Local Falcon API for local SEO rank tracking',
+		description:
+			'Interact with Local Falcon API for local SEO rank tracking and Google Business Profile management',
 		usableAsTool: true,
 		defaults: {
 			name: 'Local Falcon',
@@ -78,6 +83,30 @@ export class LocalFalcon implements INodeType {
 					{
 						name: 'Falcon Guard',
 						value: 'falconGuard',
+					},
+					{
+						name: 'Google Business Profile',
+						value: 'gbpProfile',
+					},
+					{
+						name: 'Google Business Profile Link',
+						value: 'gbpLink',
+					},
+					{
+						name: 'Google Business Profile Media',
+						value: 'gbpMedia',
+					},
+					{
+						name: 'Google Business Profile Post',
+						value: 'gbpPost',
+					},
+					{
+						name: 'Google Business Profile Review',
+						value: 'gbpReview',
+					},
+					{
+						name: 'Google Business Profile Service',
+						value: 'gbpService',
 					},
 					{
 						name: 'Location',
@@ -423,6 +452,9 @@ export class LocalFalcon implements INodeType {
 				],
 				default: 'getInfo',
 			},
+
+			// Google Business Profile Operations (one per GBP resource)
+			...gbpOperations,
 
 			// ===== SCAN FIELDS =====
 
@@ -1166,6 +1198,14 @@ export class LocalFalcon implements INodeType {
 				},
 				options: [
 					{
+						displayName: 'GBP Linked',
+						name: 'gbp_linked',
+						type: 'boolean',
+						default: false,
+						description:
+							'Whether to return only locations connected to a Google Business Profile. These are the locations the Google Business Profile resources can act on.',
+					},
+					{
 						displayName: 'Limit',
 						name: 'limit',
 						type: 'number',
@@ -1774,6 +1814,9 @@ export class LocalFalcon implements INodeType {
 					},
 				],
 			},
+
+			// ===== GOOGLE BUSINESS PROFILE FIELDS =====
+			...gbpFields,
 		],
 	};
 
@@ -1790,7 +1833,7 @@ export class LocalFalcon implements INodeType {
 				const operation = this.getNodeParameter('operation', i) as string;
 
 				let endpoint = '';
-				const body: IDataObject = {};
+				let body: IDataObject = {};
 
 				// Handle different resources and operations
 				if (resource === 'scan') {
@@ -1885,6 +1928,8 @@ export class LocalFalcon implements INodeType {
 
 						const additionalFields = this.getNodeParameter('additionalFields', i, {}) as IDataObject;
 						Object.assign(body, additionalFields);
+						// Filter flag: only ever send it when enabled
+						if (body.gbp_linked !== true) delete body.gbp_linked;
 					}
 				} else if (resource === 'report') {
 										
@@ -1982,15 +2027,19 @@ export class LocalFalcon implements INodeType {
 					if (operation === 'getInfo') {
 						endpoint = 'https://api.localfalcon.com/v2/account/';
 					}
+				} else if (resource.startsWith('gbp')) {
+					// Google Business Profile resources. Irreversible operations are
+					// refused inside buildGbpRequest, before any request is made,
+					// unless the user enabled the confirmation toggle.
+					const gbpRequest = buildGbpRequest.call(this, resource, operation, i);
+					endpoint = gbpRequest.endpoint;
+					body = gbpRequest.body;
 				}
 
-				// Convert body to FormData
-				const formData = new URLSearchParams();
-				for (const key in body) {
-					if (body[key] !== undefined && body[key] !== null && body[key] !== '') {
-						formData.append(key, String(body[key]));
-					}
-				}
+				// Encode the body as form fields. Nested arrays and objects become
+				// PHP-style bracket fields (services[0][name]), which is what the
+				// API expects; empty values are dropped.
+				const formBody = toFormBody(body);
 
 				// Make the authenticated API request. httpRequestWithAuthentication
 				// injects the credential internally (Bearer header for the API key,
@@ -2003,7 +2052,7 @@ export class LocalFalcon implements INodeType {
 					{
 						method: 'POST',
 						url: endpoint,
-						body: formData.toString(),
+						body: formBody,
 						headers: {
 							'Content-Type': 'application/x-www-form-urlencoded',
 						},
@@ -2028,7 +2077,11 @@ export class LocalFalcon implements INodeType {
 					});
 					continue;
 				}
-				throw new NodeApiError(this.getNode(), error as JsonObject);
+				// Validation and confirmation failures are node errors, not API errors
+				if (error instanceof NodeOperationError) {
+					throw error;
+				}
+				throw new NodeApiError(this.getNode(), error as JsonObject, { itemIndex: i });
 			}
 		}
 

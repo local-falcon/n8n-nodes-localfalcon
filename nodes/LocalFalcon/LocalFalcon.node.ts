@@ -7,7 +7,6 @@ import {
 	JsonObject,
 	NodeApiError,
 	NodeConnectionTypes,
-	NodeOperationError,
 } from 'n8n-workflow';
 import { gbpFields, gbpOperations } from './GbpDescription';
 import { buildGbpRequest } from './GbpRequest';
@@ -17,7 +16,7 @@ export class LocalFalcon implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Local Falcon',
 		name: 'localFalcon',
-		icon: 'file:localfalcon.svg',
+		icon: { light: 'file:localfalcon.svg', dark: 'file:localfalcon.svg' },
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
@@ -2076,10 +2075,6 @@ export class LocalFalcon implements INodeType {
 						pairedItem: { item: i },
 					});
 					continue;
-				}
-				// Validation and confirmation failures are node errors, not API errors
-				if (error instanceof NodeOperationError) {
-					throw error;
 				}
 				throw new NodeApiError(this.getNode(), error as JsonObject, { itemIndex: i });
 			}

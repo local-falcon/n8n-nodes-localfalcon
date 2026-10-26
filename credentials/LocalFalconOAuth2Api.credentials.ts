@@ -7,7 +7,7 @@ import {
 export class LocalFalconOAuth2Api implements ICredentialType {
 	name = 'localFalconOAuth2Api';
 	displayName = 'Local Falcon OAuth2 API';
-	icon: Icon = 'file:localfalcon.svg';
+	icon: Icon = { light: 'file:localfalcon.svg', dark: 'file:localfalcon.svg' };
 	extends = ['oAuth2Api'];
 	documentationUrl = 'https://www.localfalcon.com/api/credentials/';
 	// The client_id and client_secret are statically assigned OAuth application

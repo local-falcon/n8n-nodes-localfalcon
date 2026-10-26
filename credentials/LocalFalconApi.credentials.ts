@@ -9,7 +9,7 @@ import {
 export class LocalFalconApi implements ICredentialType {
 	name = 'localFalconApi';
 	displayName = 'Local Falcon API';
-	icon: Icon = 'file:localfalcon.svg';
+	icon: Icon = { light: 'file:localfalcon.svg', dark: 'file:localfalcon.svg' };
 	documentationUrl = 'https://www.localfalcon.com/api/credentials/';
 	properties: INodeProperties[] = [
 		{
